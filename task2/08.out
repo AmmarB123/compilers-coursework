@@ -1,0 +1,18 @@
+Unknown function name:
+
+[FunDecl,
+  Idfr("main"),
+  IntType,
+  [],
+  [
+    [FunInvoc,
+      [31mIdfr("fun3")[0m,
+      ...]
+  ]
+]
+
+---
+
+[31mIdfr("fun3")[0m
+
+has type UNKNOWN

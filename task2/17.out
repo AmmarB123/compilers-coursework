@@ -1,0 +1,33 @@
+Incompatible types in assignment:
+
+[Asgmt,
+  [31mIdfr("y")[0m,
+  [BinOpExpr,
+    Eq,
+    IntLit(1),
+    IntLit(1)]
+]
+
+and
+
+[Asgmt,
+  Idfr("y"),
+  [31m[BinOpExpr,
+    Eq,
+    IntLit(1),
+    IntLit(1)][0m]
+
+---
+
+[31mIdfr("y")[0m
+
+has type INT
+
+,
+
+[31m[BinOpExpr,
+  Eq,
+  IntLit(1),
+  IntLit(1)][0m
+
+has type BOOL

@@ -1,0 +1,16 @@
+Duplicated variable names:
+
+[FunDecl,
+  Idfr("fun"),
+  IntType,
+  [...,
+    ...,
+    [[31mIdfr("y")[0m, IntType]
+  ],
+  ...]
+
+---
+
+[31mIdfr("y")[0m
+
+has type INT

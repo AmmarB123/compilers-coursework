@@ -1,0 +1,16 @@
+Variable of 'unit' type:
+
+[FunDecl,
+  Idfr("fun"),
+  IntType,
+  [...,
+    ...,
+    [[31mIdfr("z")[0m, UnitType]
+  ],
+  ...]
+
+---
+
+[31mIdfr("z")[0m
+
+has type UNIT

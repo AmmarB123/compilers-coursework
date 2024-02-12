@@ -1,0 +1,17 @@
+Invalid # of arguments in invocation:
+
+[FunInvoc,
+  Idfr("fun"),
+  [31m[IntLit(1),
+    IntLit(2),
+    IntLit(3),
+    IntLit(4)][0m]
+
+---
+
+[31m[IntLit(1),
+  IntLit(2),
+  IntLit(3),
+  IntLit(4)][0m
+
+has type UNKNOWN

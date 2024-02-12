@@ -1,0 +1,21 @@
+Unknown variable name:
+
+[FunDecl,
+  Idfr("main"),
+  IntType,
+  [],
+  [
+    [FunInvoc,
+      Idfr("fun"),
+      [...,
+        [31mIdfr("a")[0m,
+        ...]
+    ]
+  ]
+]
+
+---
+
+[31mIdfr("a")[0m
+
+has type UNKNOWN

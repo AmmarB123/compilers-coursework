@@ -1,0 +1,38 @@
+Mismatched expressions in if statement:
+
+[IfStmt,
+  [BinOpExpr,
+    Eq,
+    Idfr("x"),
+    Idfr("y")],
+  [[31m[BinOpExpr,
+      Eq,
+      IntLit(1),
+      IntLit(1)][0m],
+  ...]
+
+and
+
+[IfStmt,
+  [BinOpExpr,
+    Eq,
+    Idfr("x"),
+    Idfr("y")],
+  ...,
+  [[31mIntLit(0)[0m]
+]
+
+---
+
+[31m[BinOpExpr,
+  Eq,
+  IntLit(1),
+  IntLit(1)][0m
+
+has type BOOL
+
+,
+
+[31mIntLit(0)[0m
+
+has type INT

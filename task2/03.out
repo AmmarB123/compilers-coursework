@@ -1,0 +1,35 @@
+Error in the signature of the main function:
+
+[...,
+  [31m[FunDecl,
+    Idfr("main"),
+    BoolType,
+    [],
+    [
+      [FunInvoc,
+        Idfr("fun"),
+        [IntLit(1),
+          IntLit(2),
+          IntLit(3)]
+      ]
+    ]
+  ][0m,
+  ...]
+
+---
+
+[31m[FunDecl,
+  Idfr("main"),
+  BoolType,
+  [],
+  [
+    [FunInvoc,
+      Idfr("fun"),
+      [IntLit(1),
+        IntLit(2),
+        IntLit(3)]
+    ]
+  ]
+][0m
+
+has type BOOL

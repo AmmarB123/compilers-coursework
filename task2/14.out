@@ -1,0 +1,12 @@
+Invalid condition in if statement or loop:
+
+[IfStmt,
+  [31mIdfr("x")[0m,
+  ...,
+  ...]
+
+---
+
+[31mIdfr("x")[0m
+
+has type INT

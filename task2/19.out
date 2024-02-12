@@ -1,0 +1,20 @@
+Invalid argument in invocation:
+
+[FunInvoc,
+  Idfr("fun"),
+  [...,
+    ...,
+    [31m[BinOpExpr,
+      Eq,
+      IntLit(1),
+      IntLit(1)][0m]
+]
+
+---
+
+[31m[BinOpExpr,
+  Eq,
+  IntLit(1),
+  IntLit(1)][0m
+
+has type BOOL

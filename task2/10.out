@@ -1,0 +1,35 @@
+Invalid operands in integer comparison:
+
+[BinOpExpr,
+  Eq,
+  [31mIdfr("x")[0m,
+  [BinOpExpr,
+    Eq,
+    IntLit(1),
+    IntLit(1)]
+]
+
+and
+
+[BinOpExpr,
+  Eq,
+  Idfr("x"),
+  [31m[BinOpExpr,
+    Eq,
+    IntLit(1),
+    IntLit(1)][0m]
+
+---
+
+[31mIdfr("x")[0m
+
+has type INT
+
+,
+
+[31m[BinOpExpr,
+  Eq,
+  IntLit(1),
+  IntLit(1)][0m
+
+has type BOOL

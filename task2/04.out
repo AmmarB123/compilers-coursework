@@ -1,0 +1,14 @@
+Error in the signature of the main function:
+
+[FunDecl,
+  Idfr("main"),
+  IntType,
+  [[31m[Idfr("a"), BoolType][0m,
+    ...],
+  ...]
+
+---
+
+[31m[Idfr("a"), BoolType][0m
+
+has type BOOL

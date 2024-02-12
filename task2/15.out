@@ -1,0 +1,18 @@
+Invalid final expression in loop body:
+
+[WhileLoop,
+  [BinOpExpr,
+    Eq,
+    Idfr("x"),
+    Idfr("y")],
+  [...,
+    ...,
+    ...,
+    [31mIdfr("z")[0m]
+]
+
+---
+
+[31mIdfr("z")[0m
+
+has type INT

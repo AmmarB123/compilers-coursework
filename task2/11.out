@@ -1,0 +1,35 @@
+Invalid operands in arithmetic expression:
+
+[BinOpExpr,
+  Plus,
+  [31mIdfr("z")[0m,
+  [BinOpExpr,
+    Eq,
+    IntLit(1),
+    IntLit(1)]
+]
+
+and
+
+[BinOpExpr,
+  Plus,
+  Idfr("z"),
+  [31m[BinOpExpr,
+    Eq,
+    IntLit(1),
+    IntLit(1)][0m]
+
+---
+
+[31mIdfr("z")[0m
+
+has type INT
+
+,
+
+[31m[BinOpExpr,
+  Eq,
+  IntLit(1),
+  IntLit(1)][0m
+
+has type BOOL

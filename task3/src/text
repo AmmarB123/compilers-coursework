@@ -1,0 +1,945 @@
+"M[A,a]"	Ident	,	;	=	<=	<	int	bool	string	double	intConstant	stringConstant	boolConstant	doubleConstant	null	if	else	while	return	{	}	(	)	+	*	$
+Program							Decl Decl'	Decl Decl'	Decl Decl'	Decl Decl'
+Decl'							Decl Decl'	Decl Decl'	Decl Decl'	Decl Decl'																@
+Decl							Type Ident Type'	Type Ident Type'	Type Ident Type'	Type Ident Type'
+Type'			;																			( Formals ) StmtBlock
+Type							int	bool	string	double
+Formals							Type Ident Formals'	Type Ident Formals'	Type Ident Formals'	Type Ident Formals'													@
+Formals'		, Type Ident Formals'																					@
+Stmt	T Expr'		;								T Expr'	T Expr'	T Expr'	T Expr'	T Expr'	IfStmt		WhileStmt	ReturnStmt	{ StmtBlock' Stmt' }		T Expr'
+Stmt'	Stmt Stmt'		Stmt Stmt'								Stmt Stmt'	Stmt Stmt'	Stmt Stmt'	Stmt Stmt'	Stmt Stmt'	Stmt Stmt'		Stmt Stmt'	Stmt Stmt'	Stmt Stmt'	@	Stmt Stmt'
+StmtBlock																				{ StmtBlock' Stmt' }
+StmtBlock'	@		@				Type Ident ; StmtBlock'	Type Ident ; StmtBlock'	Type Ident ; StmtBlock'	Type Ident ; StmtBlock'	@	@	@	@	@	@		@	@	@	@	@
+IfStmt																if ( T Expr' ) A7 Stmt If' A9
+If'	@		@								@	@	@	@	@	@	else A10 Stmt	@	@	@	@	@
+WhileStmt																		while ( A11 T Expr' ) A7 Stmt A8
+ReturnStmt																			return Return' ; A12
+Return'	T Expr'		@								T Expr'	T Expr'	T Expr'	T Expr'	T Expr'	@		@	@	@	A13 @	T Expr'
+Expr	T Expr'										T Expr'	T Expr'	T Expr'	T Expr'	T Expr'							T Expr'
+Expr'	@	@	@		<= T A6 Expr'	< T A5 Expr'					@	@	@	@	@	@		@	@	@	@		@	@	@
+T	F T'										F T'	F T'	F T'	F T'	F T'							F T'
+T'	@	@	@		@	@					@	@	@	@	@	@		@	@	@	@		@	+ F A1 T'	@
+F	M F'										M F'	M F'	M F'	M F'	M F'							M F'
+F'	@	@	@		@	@					@	@	@	@	@	@		@	@	@	@		@	@	* M A2 F'
+M	Ident A3 M'										Constant	Constant	Constant	Constant	Constant							( T Expr' )
+M'	@	@	@	= T A4 Expr'	@	@					@	@	@	@	@	@		@	@	@		( Actuals )	@	@	@
+Lvalue	Ident
+Actuals	T Expr' Actuals'										T Expr' Actuals'	T Expr' Actuals'	T Expr' Actuals'	T Expr' Actuals'	T Expr' Actuals'							T Expr' Actuals'
+Actuals'	@	, T Expr' Actuals'	@		@	@					@	@	@	@	@	@		@	@	@	@		@	@	@
+Constant
+
+
+
+
+
+
+
+
+
+
+
+#include<iostream>
+#include<string>
+#include<fstream>
+#include <unordered_map>
+#include<stack>
+using namespace std;
+stack <string> str;
+stack <string> str1;
+stack <string> sem2;
+stack <string> sem;
+stack <string> sem1;
+stack<string> types;
+stack<string> types1;
+stack<string> stacker;
+stack<string> whiles;
+stack<string> inter1;
+string inter = "";
+int labels = 0;
+string ifs = "";
+bool stops = false;
+stack <unordered_map<string, string>> maps;
+string Memory[29][27];
+unordered_map<string, string> umap;
+unordered_map<string, string> umap1;
+string check_key(unordered_map<string, string> m, string key)
+{
+	if (m.find(key) == m.end())
+		return "Not Present";
+	return "Present";
+}
+bool isKeyword(string word)
+{
+	bool flag = false;
+	string keywords[] = { "void", "int", "double", "bool", "string", "class", "interface", "null", "this", "extends", "implements", "for", "while", "if", "else", "return", "break", "New", "NewArray", "Print", "ReadInteger", "ReadLine" };
+	for (int i = 0; i < 22; i++)
+	{
+		if (word == keywords[i])
+		{
+			flag = true;
+		}
+	}
+	return flag;
+}
+bool isOperator(string word)
+{
+	bool flag = false;
+	string operators[] = { "+", "-", "*", "/", "%", "<", "<=", ">", ">=", "=", "==", "!=", "&&", "||", "!", ";", ",", ".", "[", "]", "(", ")", "{", "}" };
+	for (int i = 0; i < 24; i++)
+	{
+		if (word == operators[i])
+		{
+			return true;
+		}
+	}
+	return false;
+}
+void pushkaro()
+{
+	string p;
+	str.pop();
+	while (str1.empty() == false)
+	{
+		p = str1.top();
+		str1.pop();
+		str.push(p);
+	}
+}
+void removeDupWord(string str)
+{
+	string word = "";
+	for (auto x : str)
+	{
+		if (x == ' ')
+		{
+			str1.push(word);
+			word = "";
+		}
+		else
+		{
+			word = word + x;
+		}
+	}
+	str1.push(word);
+	pushkaro();
+}
+bool checkscope(string id)
+{
+	int counter = 0;
+	stack <unordered_map<string, string>> maps1 = maps;
+	while (!maps1.empty())
+	{
+		if (check_key(maps1.top(), id) == "Present")
+		{
+			umap1 = maps1.top();
+			if (types.empty())
+			{
+				types.push(umap1[id]);
+				types1.push(id);
+			}
+			else
+			{
+				string typo = umap1[id];
+				if (typo == types.top())
+				{
+					types.pop();
+					types.push(typo);
+					types1.pop();
+					types1.push(id);
+				}
+				else
+				{
+					stops = true;
+					cout << "Type Error. We can't do operation on " << types1.top() << " having type " << types.top() << " and " << id << " having type " << umap1[id] << "." << endl;
+					return false;
+				}
+			}
+			return true;
+		}
+		maps1.pop();
+	}
+	stops = true;
+	cout << id << " is used without declaration " << endl;
+	return false;
+}
+bool checkAssign(string st)
+{
+	if (!types.empty())
+	{
+		if (types.top() != st)
+		{
+			stops = true;
+			cout << "Cannot assign " << st << " type value to variable " << types1.top() << " of type " << types.top() << endl;
+			types.pop();
+			types1.pop();
+			return false;
+		}
+		else
+		{
+			types.pop();
+			types1.pop();
+			return true;
+		}
+	}
+	return false;
+}
+bool checkmatch(string st, string stt)
+{
+	fstream ifile;
+	static int counter = 0;
+	ifile.open("intermediate codes.txt", ios::app);
+	int position1, position2;
+	while (str.top() != st)
+	{
+		while (str.top() == "A1" || str.top() == "A2" || str.top() == "A3" || str.top() == "A4" || str.top() == "A5" || str.top() == "A6" || str.top() == "A7" || str.top() == "A8" || str.top() == "A9" || str.top() == "A10" || str.top() == "A11" || str.top() == "A12")
+		{
+			if (str.top() == "A1")
+			{
+				string tamp = inter1.top();
+				inter1.pop();
+				ifile << "t" << counter << " = " << inter1.top() << " + ";
+				inter1.pop();
+				ifile << tamp << ";" << endl;
+				inter1.push("t" + to_string(counter));
+				ifs = "t" + to_string(counter);
+				counter = counter + 1;
+				str.pop();
+			}
+			else if (str.top() == "A2")
+			{
+				string tamp = inter1.top();
+				inter1.pop();
+				ifile << "t" << counter << " = " << inter1.top() << " * ";
+				inter1.pop();
+				ifile << tamp << ";" << endl;
+				inter1.push("t" + to_string(counter));
+				ifs = "t" + to_string(counter);
+				counter = counter + 1;
+				str.pop();
+			}
+			else if (str.top() == "A3")
+			{
+				inter1.push(inter);
+				str.pop();
+			}
+			else if (str.top() == "A4")
+			{
+				string tamp = inter1.top();
+				inter1.pop();
+				ifile << inter1.top() << " = " << tamp << ";" << endl;
+				ifs = inter1.top();
+				inter1.pop();
+				str.pop();
+			}
+			else if (str.top() == "A5")
+			{
+				string tamp = inter1.top();
+				inter1.pop();
+				ifile << "t" << counter << " = " << inter1.top() << " < ";
+				inter1.pop();
+				ifile << tamp << ";" << endl;
+				inter1.push("t" + to_string(counter));
+				ifs = "t" + to_string(counter);
+				counter = counter + 1;
+				str.pop();
+			}
+			else if (str.top() == "A6")
+			{
+				string tamp = inter1.top();
+				inter1.pop();
+				ifile << "t" << counter << " = " << inter1.top() << " <= ";
+				inter1.pop();
+				ifile << tamp << ";" << endl;
+				inter1.push("t" + to_string(counter));
+				ifs = "t" + to_string(counter);
+				counter = counter + 1;
+				str.pop();
+			}
+			else if (str.top() == "A7")
+			{
+				if (inter1.top() == "true" || inter1.top() == "false")
+					ifile << "if(" << inter1.top() << ") goto L" << to_string(labels) << endl;
+				else
+					ifile << "if(" << ifs << ") goto L" << to_string(labels) << endl;
+				labels++;
+				ifs = "";
+				ifile << "\tgoto L" << to_string(labels) << endl;
+				labels++;
+				stacker.push("L" + to_string(labels - 1));
+				ifile << "L"+ to_string(labels-2) + " : " << endl;
+				str.pop();
+			}
+			else if (str.top() == "A8")
+			{
+				ifile << "goto " << whiles.top() << endl;
+				whiles.pop();
+				ifile << stacker.top() << " : " << endl;
+				stacker.pop();
+				str.pop();
+			}
+			else if (str.top() == "A9")
+			{
+				ifile << stacker.top() << " : " << endl;
+				stacker.pop();
+				str.pop();
+			}
+			else if (str.top() == "A10")
+			{
+				ifile << "goto L" << to_string(labels) << endl;
+				ifile << stacker.top() << " : " << endl;
+				stacker.pop();
+				stacker.push("L" + to_string(labels));
+				labels++;
+				str.pop();
+			}
+			else if (str.top() == "A11")
+			{
+				ifile << "L" + to_string(labels) + " : " << endl;
+				whiles.push("L" + to_string(labels));
+				labels++;
+				str.pop();
+			}
+			else if (str.top() == "A12")
+			{
+				if (!inter1.empty())
+				{
+					ifs = inter1.top();
+					inter1.pop();
+					ifile << "return " << ifs << ";" << endl;
+				}
+				str.pop();
+			}
+		}
+		for (int i = 0; i < 29; i++)
+		{
+			if (str.top() == Memory[i][0])
+			{
+				position1 = i;
+			}
+		}
+		for (int j = 0; j < 27; j++)
+		{
+			if (st == Memory[0][j])
+			{
+				position2 = j;
+			}
+		}
+		if (Memory[position1][position2] != "")
+		{
+			if (Memory[position1][position2] == "@")
+			{
+				str.pop();
+			}
+			else
+			{
+				removeDupWord(Memory[position1][position2]);
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	if (str.top() == st)
+	{
+		inter = stt;
+		if (st == "int" || st == "string" || st == "bool" || st == "double")
+		{
+			sem.push(stt);
+		}
+		if (st == "Ident" &&!sem.empty())
+		{
+			sem.push(stt);
+		}
+		if (st == "if" || st == "while")
+		{
+			sem2.push(stt);
+		}
+		if (st == "Ident" && sem.empty())
+		{
+			maps.push(umap);
+			checkscope(stt);
+			maps.pop();
+		}
+		if (st == ";" &&!sem.empty())
+		{
+			string key = sem.top();
+			sem.pop();
+			string value = sem.top();
+			sem.pop();
+			if (check_key(umap, key) == "Present")
+			{
+				stops = true;
+				cout << "Redefinition Error. The variable " << key << " is already defined" << endl;
+			}
+			else
+			{
+				umap[key] = value;
+			}
+		}
+		if (st == "," &&!sem.empty())
+		{
+			string key = sem.top();
+			sem.pop();
+			string value = sem.top();
+			sem.pop();
+			if (check_key(umap, key) == "Present")
+			{
+				stops = true;
+				cout << "Redefinition Error. The variable " << key << " is already defined" << endl;
+			}
+			else
+			{
+				umap[key] = value;
+			}
+		}
+		if (st == ";"&&!types.empty())
+		{
+			while (!types.empty())
+			{
+				types.pop();
+				types1.pop();
+			}
+		}
+		if (st == "("&&!sem.empty())
+		{
+			string key = sem.top();
+			sem.pop();
+			string value = sem.top();
+			sem.pop();
+			if (check_key(umap, key) == "Present")
+			{
+				stops = true;
+				cout << "Redefinition Error. The variable " << key << " is already defined" << endl;
+			}
+			else
+			{
+				umap[key] = value;
+			}
+
+			maps.push(umap);
+
+			umap.clear();
+		}
+		if (st == "("&&!sem2.empty())
+		{
+			sem2.pop();
+			maps.push(umap);
+
+			umap.clear();
+		}
+		if (st == "boolConstant" || st == "stringConstant" || st == "intConstant" || st == "doubleConstant")
+		{
+			if (st == "boolConstant")
+			{
+				st = "bool";
+			}
+			if (st == "intConstant")
+			{
+				st = "int";
+			}
+			if (st == "stringConstant")
+			{
+				st = "string";
+			}
+			if (st == "doubleConstant")
+			{
+				st = "double";
+			}
+			checkAssign(st);
+		}
+		if (st == ")")
+		{
+			if (sem.size() == 2)
+			{
+				string key = sem.top();
+				sem.pop();
+				string value = sem.top();
+				sem.pop();
+				if (check_key(umap, key) == "Present")
+				{
+					stops = true;
+					cout << "Redefinition Error. The variable " << key << " is already defined" << endl;
+				}
+				else
+				{
+					umap[key] = value;
+				}
+			}
+			sem1.push(st);
+		}
+		if (st == ";" || st == ","&&!sem1.empty())
+		{
+			while (!sem1.empty())
+			{
+				sem1.pop();
+			}
+
+		}
+		if (st == "{"&& sem1.empty())
+		{
+			maps.push(umap);
+
+			umap.clear();
+		}
+		if (st == "}")
+		{
+			umap.clear();
+			if (!maps.empty())
+			{
+				umap = maps.top();
+				maps.pop();
+			}
+		}
+		str.pop();
+		return true;
+	}
+	return true;
+}
+int main(int argc, char *argv[])
+{
+	char ch;
+	string filename = "data1.txt";
+	//string filename = argv[1];
+	fstream file, t;
+	t.open("codes.txt", ios::out);
+	int temp = 0;
+	string buffer = "";
+	string operators[] = { "+", "-", "*", "/", "%", "<", "<=", ">", ">=", "=", "==", "!=", "&&", "||", "!", ";", ",", ".", "[", "]", "(", ")", "{", "}" };
+	fstream tfiles;
+	tfiles.open("matched.txt", ios::out);
+	//open file
+	file.open(filename);
+	bool flag = false, flag1 = true, flags = true;
+	if (!file)
+	{
+		cout << 1 << endl;
+		cout << "Error in opening file!!!" << endl;
+		return -1; //return from main
+	}
+	if (!t)
+	{
+		cout << 11 << endl;
+		cout << "Error in opening file!!!" << endl;
+		return -1; //return from main
+	}
+	//read and print file content
+	while (!file.eof())
+	{
+		file >> noskipws >> ch; //reading from file
+		if (buffer != "")
+		{
+			if (buffer.at(0) == '0' && (ch == 'X' || ch == 'x'))
+			{
+				buffer = buffer + string(1, ch);
+				file >> noskipws >> ch;
+				while (((int(ch) >= 65 && int(ch) < 71) || (int(ch) >= 97 && int(ch) < 103)) || (int(ch) >= 48 && int(ch) < 58))
+				{
+					buffer = buffer + string(1, ch);
+					file >> noskipws >> ch;
+				}
+				if (buffer.find(string(1, '.')) != std::string::npos)
+				{
+					t << "doubleConstant ";
+					tfiles << buffer<<" ";
+				}
+				else
+				{
+					t << "intConstant ";
+					tfiles << buffer << " ";
+				}
+				if (ch == '\n')
+				{
+					t << ch;
+					tfiles << ch;
+				}
+				buffer = "";
+			}
+			if (buffer != "")
+			{
+				if (buffer.at(0) == '0' || buffer.at(0) == '1' || buffer.at(0) == '2' || buffer.at(0) == '3' || buffer.at(0) == '4' || buffer.at(0) == '5' || buffer.at(0) == '6' || buffer.at(0) == '7' || buffer.at(0) == '8' || buffer.at(0) == '9' || buffer.at(0) == '+' || buffer.at(0) == '-')
+				{
+					if ((ch == '\n' || ch == ' ' || ch == ',' || ch == ';' || ch == '\t') || ((isOperator(string(1, ch)) == true) && (ch != '+' && ch != '.' && ch != '-')) || ((isOperator(string(1, ch)) == false) && (int)ch >= 65 && (int)ch <= 122 && ch != 'E' && ch != 'e' && ch != '0'&& ch != '1' && ch != '2'&& ch != '3'&& ch != '4'&& ch != '5'&& ch != '6'&& ch != '7'&& ch != '8'&& ch != '9'))
+					{
+						if (buffer != "-" && buffer != "+")
+						{
+							if (buffer.find(string(1, '.')) != std::string::npos)
+							{
+								t << "doubleConstant ";
+								tfiles << buffer << " ";
+							}
+							else
+							{
+								t << "intConstant ";
+								tfiles << buffer << " ";
+							}
+							if (ch == '\n')
+							{
+								t << ch;
+								tfiles << ch;
+							}
+							buffer = "";
+						}
+						flag1 = true;
+						temp = 1;
+					}
+					if (temp == 0)
+					{
+						flag1 = false;
+					}
+				}
+			}
+		}
+		if (flag1 == true)
+		{
+			if (isOperator(buffer) == true)
+			{
+				if (isOperator(buffer + string(1, ch)) == true || buffer + string(1, ch) == "/*" || buffer + string(1, ch) == "//")
+				{
+					buffer += string(1, ch);
+					if (buffer.at(0) == '/'&&buffer.at(1) == '/')
+					{
+						file >> noskipws >> ch;
+						while (ch != '\n')
+						{
+							buffer += string(1, ch);
+							file >> noskipws >> ch;
+						}
+						//t << "<comment," << buffer << ">" << endl;
+
+						buffer = "";
+					}
+					else if (buffer.at(0) == '/' && buffer.at(1) == '*')
+					{
+						while (flags == false)
+						{
+							if (ch != '*')
+							{
+								file >> noskipws >> ch;
+								buffer += string(1, ch);
+							}
+							else
+							{
+								buffer += string(1, ch);
+								file >> noskipws >> ch;
+								if (ch == '/')
+								{
+									buffer += string(1, ch);
+									//t << "<multiline-comment," << buffer << ">" << endl;
+									buffer = "";
+									flags = true;
+								}
+							}
+						}
+					}
+					file >> noskipws >> ch;
+				}
+				flag = true;
+			}
+			else if (isOperator(string(1, ch)) == true)
+			{
+				if (isKeyword(buffer) == true)
+				{
+					if (buffer == "int")
+					{
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "string"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "bool"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "double"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "if"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "while"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "return"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "else"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					if (ch == '\n')
+					{
+						t << ch;
+						tfiles << ch;
+					}
+				}
+				else
+				{
+					if (buffer != ""&& buffer != string(1, '"'))
+					{
+						if (buffer == "true" || buffer == "false")
+						{
+							t << "boolConstant ";
+							tfiles << buffer << " ";
+							if (ch == '\n')
+							{
+								t << ch;
+								tfiles << ch;
+							}
+						}
+						else
+						{
+							t << "Ident ";
+							tfiles << buffer << " ";
+							if (ch == '\n')
+							{
+								t << ch;
+								tfiles << ch;
+							}
+						}
+					}
+				}
+				buffer = "";
+			}
+			if (ch == '"')
+			{
+				buffer = buffer + string(1, '"');
+				ch = 'c';
+				while (ch != '"'&&!file.eof())
+				{
+					file >> noskipws >> ch;
+					buffer = buffer + string(1, ch);
+				}
+				t << "stringConstant ";
+				tfiles << buffer << " ";
+				if (ch == '\n')
+				{
+					t << ch;
+					tfiles << ch;
+				}
+				buffer = "";
+			}
+			if (ch == '\n' || ch == ' ' || ch == ',' || ch == ';' || ch == '\t' || (flag == true))
+			{
+				if (isKeyword(buffer) == true)
+				{
+					if (buffer == "int")
+					{
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "string")
+					{
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "bool")
+					{
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "double")
+					{
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "if"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "while"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "return"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "else"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					if (ch == '\n')
+					{
+						t << ch;
+						tfiles << ch;
+					}
+				}
+				else if (isOperator(buffer) == true)
+				{
+					if (buffer == "+")
+					{
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "="){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "*"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "<"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "<="){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == ","){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == ";"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "("){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == ")"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "{"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					else if (buffer == "}"){
+						t << buffer << " ";
+						tfiles << buffer << " ";
+					}
+					if (ch == '\n')
+					{
+						t << ch;
+						tfiles << ch;
+					}
+				}
+				else
+				{
+					if (buffer != "" && buffer != string(1, '"'))
+					{
+						if (buffer == "true" || buffer == "false")
+						{
+							t << "boolConstant ";
+							tfiles << buffer << " ";
+							if (ch == '\n')
+							{
+								t << ch;
+								tfiles << ch;
+							}
+						}
+						else
+						{
+							t << "Ident ";
+							tfiles << buffer << " ";
+							if (ch == '\n')
+							{
+								t << ch;
+								tfiles << ch;
+							}
+						}
+					}
+				}
+				buffer = "";
+				flag = false;
+			}
+		}
+		if (ch != '\n' && ch != '\t' && ch != ' ')
+		{
+			buffer += string(1, ch);
+		}
+		temp = 0;
+		flags = false;
+	}
+	file.close();
+	t << '$';
+	tfiles << '$';
+	tfiles.close();
+	t.close();
+	fstream fin;
+	fin.open("Parse Table.txt", ios::in);
+	int i = 0;
+	buffer = "";
+	ch = '\n';
+	string parse[29][27];
+	while (i < 29)
+	{
+		for (int j = 0; j < 27; j++)
+		{
+			if (j == 26)
+			{
+				getline(fin, buffer, '\n');
+			}
+			else
+			{
+				getline(fin, buffer, '\t');
+			}
+			parse[i][j] = buffer;
+		}
+		i++;
+	}
+	for (int i = 0; i < 29; i++)
+	{
+		for (int j = 0; j < 27; j++)
+		{
+			Memory[i][j] = parse[i][j];
+		}
+	}
+	cout << endl;
+	fin.close();
+	string input, input1;
+	fstream codes;
+	fstream ifile;
+	ifile.open("intermediate codes.txt", ios::out);
+	ifile << "";
+	fstream semantics;
+	semantics.open("matched.txt", ios::in);
+	bool check;
+	check = true;
+	str.push("$");
+	str.push(Memory[1][0]);
+	codes.open("codes.txt", ios::in);
+	while (!codes.eof())
+	{
+		codes >> input;
+		semantics >> input1;
+		if (input != " " && input != "\n")
+		{
+			check = checkmatch(input, input1);
+			if (check == false)
+			{
+				cout << "Syntax Error " << endl;
+				codes.close();
+				break;
+			}
+		}
+	}
+	if (check == true)
+	{
+		codes.close();
+		cout << endl;
+		cout << "Program Successfully Executed after checking Syntax" << endl;
+	}
+	if (stops == true||check==false)
+	{
+		cout << "Intermediate Code cannot be generated until errors are not removed " << endl;
+		fstream ifiles1;
+		ifiles1.open("intermediate codes.txt", ios::out);
+		ifiles1 << "";
+		ifiles1.close();
+	}
+	ifile.close();
+	cout << endl;
+	system("pause");
+	return 0;
+}

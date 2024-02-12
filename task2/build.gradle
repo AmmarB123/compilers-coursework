@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
+
+task run(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'Task2'
+    standardInput = System.in
+}
+
+dependencies {
+    implementation files ('src/antlr-4.9.2-complete.jar')
+}

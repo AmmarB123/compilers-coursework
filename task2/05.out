@@ -1,0 +1,16 @@
+Duplicated function names:
+
+[...,
+  ...,
+  [FunDecl,
+    [31mIdfr("fun")[0m,
+    UnitType,
+    [],
+    ...]
+]
+
+---
+
+[31mIdfr("fun")[0m
+
+has type UNIT
